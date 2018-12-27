@@ -71,7 +71,7 @@ fun Canvas.drawLRONode(i : Int, scale : Float, paint : Paint) {
         x += Math.floor(xGap.toDouble() * sc).toFloat()
     }
     save()
-    translate(-((lines)/2 * xGap), 0f)
+    translate(-((lines + 1) * 0.5f * xGap), 0f)
     drawLine(0f, 0f, x + xGap, 0f, paint)
     save()
     translate(x + xGap, 0f)
