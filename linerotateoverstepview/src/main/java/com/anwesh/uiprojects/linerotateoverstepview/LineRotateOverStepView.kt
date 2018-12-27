@@ -11,6 +11,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Color
 import android.app.Activity
+import android.graphics.RectF
 
 val nodes : Int = 5
 val lines : Int = 4
@@ -34,6 +35,17 @@ fun Float.mirrorValue(a : Int, b : Int) : Float =   (1 - scaleFactor()) * a.inve
 
 fun Float.updateScale(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
 
+fun Canvas.drawProgressiveCircle(x : Float, r : Float, scale : Float, paint : Paint) {
+    paint.style = Paint.Style.STROKE
+    for (i in 0..1) {
+        val sc : Float = scale.divideScale(i, 2)
+        save()
+        translate(x * (1 - 2 * i), 0f)
+        drawArc(RectF(-r, -r, r, r), -90f, 360f * sc, false, paint)
+        restore()
+    }
+}
+
 fun Canvas.drawLRONode(i : Int, scale : Float, paint : Paint) {
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
@@ -46,7 +58,8 @@ fun Canvas.drawLRONode(i : Int, scale : Float, paint : Paint) {
     paint.strokeWidth = Math.min(w, h) / strokeFactor
     paint.strokeCap = Paint.Cap.ROUND
     save()
-    translate(w/2 - ((lines)/2 * xGap), gap * (i + 1))
+    translate(w/2, gap * (i + 1))
+    drawProgressiveCircle((w/2 - size/3 - paint.strokeWidth/2), size/3, scale, paint)
     rotate(90f * sc2)
     var x : Float = 0f
     var deg : Float = 0f
@@ -57,11 +70,14 @@ fun Canvas.drawLRONode(i : Int, scale : Float, paint : Paint) {
         }
         x += Math.floor(xGap.toDouble() * sc).toFloat()
     }
+    save()
+    translate(-((lines)/2 * xGap), 0f)
     drawLine(0f, 0f, x + xGap, 0f, paint)
     save()
     translate(x + xGap, 0f)
     rotate(deg)
     drawLine(0f, 0f, -xGap, 0f, paint)
+    restore()
     restore()
     restore()
 }
