@@ -20,6 +20,7 @@ val color : Int = Color.parseColor("#2ecc71")
 val sizeFactor : Float = 2.6f
 val strokeFactor : Int = 90
 val backColor : Int = Color.parseColor("#212121")
+val delay : Long = 20
 
 fun Int.inverse() : Float = 1f / this
 
@@ -108,7 +109,7 @@ class LineRotateOverStepView(ctx : Context) : View(ctx) {
             if (animated) {
                 cb()
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(delay)
                     view.invalidate()
                 } catch(ex : Exception) {
 
