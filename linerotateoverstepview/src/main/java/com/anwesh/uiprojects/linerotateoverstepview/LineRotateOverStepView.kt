@@ -194,4 +194,25 @@ class LineRotateOverStepView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : LineRotateOverStepView) {
+        private val animator : Animator = Animator(view)
+        private val lros : LineRotateOverStep = LineRotateOverStep(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#BDBDBD"))
+            lros.draw(canvas, paint)
+            animator.animate {
+                lros.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            lros.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
