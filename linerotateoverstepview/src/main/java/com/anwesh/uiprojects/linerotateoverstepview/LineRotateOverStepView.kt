@@ -19,6 +19,7 @@ val scDiv : Double = 0.51
 val color : Int = Color.parseColor("#2ecc71")
 val sizeFactor : Float = 2.6f
 val strokeFactor : Int = 90
+val backColor : Int = Color.parseColor("#212121")
 
 fun Int.inverse() : Float = 1f / this
 
@@ -39,25 +40,25 @@ fun Canvas.drawLRONode(i : Int, scale : Float, paint : Paint) {
     val size : Float = gap / sizeFactor
     val sc1 : Float = scale.divideScale(0, 2)
     val sc2 : Float = scale.divideScale(1, 2)
-    val xGap : Float = size / (lines + 1)
+    val xGap : Float = (2 * size) / (lines + 1)
     paint.color = color
     paint.strokeWidth = Math.min(w, h) / strokeFactor
     paint.strokeCap = Paint.Cap.ROUND
     save()
-    translate(w/2 - (lines + 1)/2 * xGap, gap * (i + 1))
+    translate(w/2 - ((lines)/2 * xGap), gap * (i + 1))
     rotate(90f * sc2)
     var x : Float = 0f
     var deg : Float = 0f
     for (j in 0..(lines - 1)) {
         val sc = sc1.divideScale(j, lines)
         if (sc > 0) {
-            deg = 180f * sc
+            deg = 180f * sc * (1 -  2 * (j % 2))
         }
         x += Math.floor(xGap.toDouble() * sc).toFloat()
     }
-    drawLine(x, 0f, x + xGap, 0f, paint)
+    drawLine(0f, 0f, x + xGap, 0f, paint)
     save()
-    translate(x, 0f)
+    translate(x + xGap, 0f)
     rotate(deg)
     drawLine(0f, 0f, -xGap, 0f, paint)
     restore()
@@ -201,7 +202,7 @@ class LineRotateOverStepView(ctx : Context) : View(ctx) {
         private val lros : LineRotateOverStep = LineRotateOverStep(0)
 
         fun render(canvas : Canvas, paint : Paint) {
-            canvas.drawColor(Color.parseColor("#BDBDBD"))
+            canvas.drawColor(backColor)
             lros.draw(canvas, paint)
             animator.animate {
                 lros.update {i, scl ->
@@ -221,7 +222,7 @@ class LineRotateOverStepView(ctx : Context) : View(ctx) {
         fun create(activity : Activity) : LineRotateOverStepView {
             val view : LineRotateOverStepView = LineRotateOverStepView(activity)
             activity.setContentView(view)
-            return view 
+            return view
         }
     }
 }
