@@ -216,4 +216,12 @@ class LineRotateOverStepView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+        fun create(activity : Activity) : LineRotateOverStepView {
+            val view : LineRotateOverStepView = LineRotateOverStepView(activity)
+            activity.setContentView(view)
+            return view 
+        }
+    }
 }
